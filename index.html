@@ -17,25 +17,27 @@
 
     <div class="ctrl-divider"></div>
 
-    <!-- Range low -->
+    <!-- Keyboard size preset -->
     <div class="ctrl-group">
-      <span class="ctrl-label">Lowest note</span>
+      <span class="ctrl-label">Keyboard size</span>
       <div class="range-row">
-        <input type="range" id="range-low" min="24" max="84" value="48" step="12">
-        <span class="range-val" id="lv">C3</span>
+        <select id="keyboard-preset">
+          <option value="36,60">25 Keys (C2–C4)</option>
+          <option value="36,72" selected>37 Keys (C2–C5)</option>
+          <option value="36,84">49 Keys (C2–C6)</option>
+          <option value="36,96">61 Keys (C2–C7)</option>
+          <option value="24,96">73 Keys (C1–C7)</option>
+          <option value="28,103">76 Keys (E1–G7)</option>
+          <option value="21,108">88 Keys (A0–C8)</option>
+        </select>
       </div>
     </div>
 
-    <!-- Range high -->
-    <div class="ctrl-group">
-      <span class="ctrl-label">Highest note</span>
-      <div class="range-row">
-        <input type="range" id="range-high" min="24" max="84" value="84" step="12">
-        <span class="range-val" id="hv">C6</span>
-      </div>
-    </div>
+    <input type="hidden" id="range-low" value="36">
+    <input type="hidden" id="range-high" value="72">
 
     <div class="ctrl-group" style="justify-content:flex-end">
+      <span class="range-val"><span id="lv">C2</span> – <span id="hv">C5</span></span>
       <span class="key-count" id="key-count">37 keys</span>
     </div>
   </div>
@@ -58,7 +60,6 @@
   <script src="js/app.js" defer></script>
 </body>
 </html>
-
 
 
 
