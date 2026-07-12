@@ -7,6 +7,7 @@ const SOUNDFONT_URL =
 const PROGRAMS = {
   piano: 0,
   epiano: 4,
+  epiano2: 5,
   honky: 3,
   organ: 19,
   hammond: 16,
@@ -113,8 +114,15 @@ function stopNote(midi) {
   activeNotes.delete(midi);
 }
 
+function stopAllNotes() {
+  requestedNotes.clear();
+  activeNotes.clear();
+  synthesizer?.stopAll(true);
+}
+
 window.startNote = startNote;
 window.stopNote = stopNote;
+window.stopAllNotes = stopAllNotes;
 window.resumeAudio = () => audioContext.resume();
 
 // Download the SoundFont early so the first played note has minimal delay.

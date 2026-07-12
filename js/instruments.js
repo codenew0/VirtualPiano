@@ -9,8 +9,10 @@ INSTRUMENTS.forEach(inst => {
   if (inst.id === currentInst) opt.selected = true;
   instSel.appendChild(opt);
 });
-instSel.addEventListener('change', () => { currentInst = instSel.value; });
+instSel.addEventListener('change', () => {
+  window.stopAllNotes?.();
+  currentInst = instSel.value;
+});
 
 window.getCurrentInstrument = () => currentInst;
-
 

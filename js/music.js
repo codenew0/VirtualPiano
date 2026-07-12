@@ -23,7 +23,8 @@ function isBlack(midi) { return [1,3,6,8,10].includes(midi % 12); }
 // -------------------------------------------------------
 const INSTRUMENTS = [
   { id:'piano',     label:'Grand Piano'    },
-  { id:'epiano',    label:'Electric Piano' },
+  { id:'epiano',    label:'Electric Piano 1' },
+  { id:'epiano2',   label:'Electric Piano 2 (FM)' },
   { id:'honky',     label:'Honky-tonk'     },
   { id:'organ',     label:'Pipe Organ'     },
   { id:'hammond',   label:'Hammond'        },
@@ -54,6 +55,5 @@ const INSTRUMENTS = [
 ];
 
 let currentInst = 'piano';
-
 
 
