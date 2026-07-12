@@ -30,15 +30,13 @@ function buildPiano() {
     whiteEls[midi] = el;
   });
 
-  whites.forEach((midi, idx) => {
-    const s = midi % 12;
-    if ([0,2,5,7,9].includes(s)) {
-      const bm = midi + 1;
-      if (bm > hi) return;
+  for (let bm = lo; bm <= hi; bm++) {
+    if (isBlack(bm)) {
       const el = document.createElement('div');
       el.className = 'key-black';
       el.dataset.midi = bm;
-      const left = 24 + idx * WHITE_W + WHITE_W - 14;
+      const precedingWhites = whites.filter(midi => midi < bm).length;
+      const left = 24 + precedingWhites * WHITE_W - 14;
       el.style.left = left + 'px';
       el.style.top  = '20px';
       const kc = shortcutLabel(bm);
@@ -49,9 +47,8 @@ function buildPiano() {
       container.appendChild(el);
       blackEls[bm] = el;
     }
-  });
+  }
 
   container.style.width = (whites.length * WHITE_W + 48) + 'px';
 }
-
 

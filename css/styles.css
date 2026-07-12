@@ -48,9 +48,8 @@ h1 {
   font-weight: 600;
 }
 
-/* Dropdown selectors */
-#inst-sel,
-#keyboard-preset {
+/* Instrument selector */
+#inst-sel {
   background: #1e1e30;
   border: 1px solid #334;
   color: #a0c4ff;
@@ -63,17 +62,44 @@ h1 {
   min-width: 160px;
 }
 
-#inst-sel:hover,
-#keyboard-preset:hover { border-color: #556; }
+#inst-sel:hover { border-color: #556; }
 
-#inst-sel:focus,
-#keyboard-preset:focus { border-color: #a0c4ff; }
+#inst-sel:focus { border-color: #a0c4ff; }
 
-/* Keyboard range summary */
+/* Range sliders */
 .range-row {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 110px;
+  height: 4px;
+  border-radius: 2px;
+  background: #334;
+  outline: none;
+  cursor: pointer;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #a0c4ff;
+  cursor: pointer;
+}
+
+input[type=range]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #a0c4ff;
+  border: none;
+  cursor: pointer;
 }
 
 .range-val {
@@ -204,5 +230,4 @@ h1 {
   min-height: 1.4em;
   margin-top: 0.4rem;
 }
-
 
