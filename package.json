@@ -4,13 +4,15 @@
   "private": true,
   "description": "A browser-based virtual piano using the Signal Factory Sound SoundFont.",
   "scripts": {
-    "build": "npm run copy:worklet && esbuild ./js/audio-source.js --bundle --minify --legal-comments=inline --format=iife --platform=browser --outfile=./js/audio.js",
+    "build": "npm run build:audio && node scripts/build-site.mjs",
+    "build:audio": "npm run copy:worklet && esbuild ./js/audio-source.js --bundle --minify --legal-comments=inline --format=iife --platform=browser --outfile=./js/audio.js",
     "copy:worklet": "node scripts/copy-worklet.mjs"
   },
   "dependencies": {
     "spessasynth_lib": "^4.3.0"
   },
   "devDependencies": {
-    "esbuild": "^0.25.0"
+    "esbuild": "^0.25.0",
+    "wrangler": "^4.0.0"
   }
 }

@@ -64,6 +64,15 @@ npm install
 npm run build
 ```
 
+## Cloudflare Pagesへのデプロイ
+
+公開用ファイルを生成し、Cloudflare Pagesへアップロードします。
+
+```bash
+npm run build
+npx wrangler pages deploy
+```
+
 ## ライセンス
 
 [MIT License](LICENSE) のもとで公開しています。
