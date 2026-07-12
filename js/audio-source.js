@@ -36,25 +36,14 @@ const PROGRAMS = {
   brass: 61,
 };
 
-const NOTE_LENGTHS = {
-  organ: 1800,
-  hammond: 1800,
-  strings: 1800,
-  violin: 1800,
-  cello: 1800,
-  choir: 1800,
-  pad: 2200,
-  guitar: 2400,
-  harp: 2400,
-};
-
 const audioContext = new (window.AudioContext || window.webkitAudioContext)({
   sampleRate: 44100,
 });
 
 let synthesizer = null;
 let setupPromise = null;
-const releaseTimers = new Map();
+const requestedNotes = new Set();
+const activeNotes = new Set();
 
 async function setupSynthesizer() {
   if (synthesizer) return synthesizer;
@@ -79,6 +68,7 @@ async function setupSynthesizer() {
     await synth.soundBankManager.addSoundBank(soundFont, "signal-factory");
     await synth.isReady;
     synthesizer = synth;
+    if (status) status.textContent = "音源の準備ができました";
     return synth;
   })().catch((error) => {
     setupPromise = null;
@@ -90,29 +80,24 @@ async function setupSynthesizer() {
   return setupPromise;
 }
 
-async function playNote(midi) {
+async function startNote(midi) {
+  requestedNotes.add(midi);
   await audioContext.resume();
 
   try {
     const synth = await setupSynthesizer();
+    if (!requestedNotes.has(midi)) return false;
+
     const instrument = window.getCurrentInstrument();
     const program = PROGRAMS[instrument] ?? PROGRAMS.piano;
-    const timerKey = `${program}:${midi}`;
 
-    if (releaseTimers.has(timerKey)) {
-      clearTimeout(releaseTimers.get(timerKey));
+    if (activeNotes.has(midi)) {
       synth.noteOff(0, midi);
     }
 
     synth.programChange(0, program);
     synth.noteOn(0, midi, 100);
-
-    const releaseTimer = setTimeout(() => {
-      synth.noteOff(0, midi);
-      releaseTimers.delete(timerKey);
-    }, NOTE_LENGTHS[instrument] ?? 1400);
-
-    releaseTimers.set(timerKey, releaseTimer);
+    activeNotes.add(midi);
     return true;
   } catch (error) {
     console.error(error);
@@ -120,5 +105,17 @@ async function playNote(midi) {
   }
 }
 
-window.playNote = playNote;
+function stopNote(midi) {
+  requestedNotes.delete(midi);
+  if (!synthesizer || !activeNotes.has(midi)) return;
+
+  synthesizer.noteOff(0, midi);
+  activeNotes.delete(midi);
+}
+
+window.startNote = startNote;
+window.stopNote = stopNote;
 window.resumeAudio = () => audioContext.resume();
+
+// Download the SoundFont early so the first played note has minimal delay.
+setupSynthesizer().catch(() => {});

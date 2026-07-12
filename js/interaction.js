@@ -1,29 +1,37 @@
 // -------------------------------------------------------
 //  Interaction
 // -------------------------------------------------------
-async function triggerKey(midi, el) {
+async function pressKey(midi, el) {
   el.classList.add('active');
   lastNote.textContent = noteName(midi) + '  (MIDI ' + midi + ')';
-  setTimeout(() => el.classList.remove('active'), 200);
 
-  const played = await playNote(midi);
+  const played = await startNote(midi);
   if (played) {
     lastNote.textContent = noteName(midi) + '  (MIDI ' + midi + ')';
   }
 }
 
-container.addEventListener('mousedown', e => {
+function releaseKey(midi, el) {
+  stopNote(midi);
+  el?.classList.remove('active');
+}
+
+container.addEventListener('pointerdown', e => {
   const el = e.target.closest('[data-midi]');
   if (!el) return;
-  triggerKey(Number(el.dataset.midi), el);
+
+  e.preventDefault();
+  el.setPointerCapture(e.pointerId);
+  pressKey(Number(el.dataset.midi), el);
 });
 
-container.addEventListener('touchstart', e => {
-  e.preventDefault();
-  const t = e.touches[0];
-  const el = document.elementFromPoint(t.clientX, t.clientY)?.closest('[data-midi]');
-  if (el) triggerKey(Number(el.dataset.midi), el);
-}, { passive: false });
+function releasePointer(e) {
+  const el = e.target.closest('[data-midi]');
+  if (el) releaseKey(Number(el.dataset.midi), el);
+}
+
+container.addEventListener('pointerup', releasePointer);
+container.addEventListener('pointercancel', releasePointer);
 
 const pressedKeys = new Set();
 document.addEventListener('keydown', e => {
@@ -35,11 +43,16 @@ document.addEventListener('keydown', e => {
     if (pressedKeys.has(ch)) return;
     pressedKeys.add(ch);
     const el = whiteEls[midi] || blackEls[midi];
-    if (el) triggerKey(midi, el);
+    if (el) pressKey(midi, el);
   }
 });
 
 document.addEventListener('keyup', e => {
-  pressedKeys.delete(e.key.toLowerCase());
+  const ch = e.key.toLowerCase();
+  if (!(ch in CHAR_MAP)) return;
+
+  const midi = CHAR_MAP[ch];
+  pressedKeys.delete(ch);
+  releaseKey(midi, whiteEls[midi] || blackEls[midi]);
 });
 
