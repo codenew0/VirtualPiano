@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Virtual Piano</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <h1>Virtual Piano</h1>
+
+  <div id="controls">
+    <!-- Instrument -->
+    <div class="ctrl-group">
+      <span class="ctrl-label">Instrument</span>
+      <select id="inst-sel"></select>
+    </div>
+
+    <div class="ctrl-divider"></div>
+
+    <!-- Range low -->
+    <div class="ctrl-group">
+      <span class="ctrl-label">Lowest note</span>
+      <div class="range-row">
+        <input type="range" id="range-low" min="21" max="96" value="48" step="1">
+        <span class="range-val" id="lv">C3</span>
+      </div>
+    </div>
+
+    <!-- Range high -->
+    <div class="ctrl-group">
+      <span class="ctrl-label">Highest note</span>
+      <div class="range-row">
+        <input type="range" id="range-high" min="24" max="108" value="84" step="1">
+        <span class="range-val" id="hv">C6</span>
+      </div>
+    </div>
+
+    <div class="ctrl-group" style="justify-content:flex-end">
+      <span class="key-count" id="key-count">37 keys</span>
+    </div>
+  </div>
+
+  <div id="piano-scroll">
+    <div id="piano-container"></div>
+  </div>
+
+  <div id="info">
+    キーボードまたはクリックで演奏 / Play with keyboard or click<br>
+    <span id="last-note">&nbsp;</span>
+  </div>
+
+  <script src="js/music.js" defer></script>
+  <script src="js/audio.js" defer></script>
+  <script src="js/instruments.js" defer></script>
+  <script src="js/range-controls.js" defer></script>
+  <script src="js/piano-ui.js" defer></script>
+  <script src="js/interaction.js" defer></script>
+  <script src="js/app.js" defer></script>
+</body>
+</html>
+
+
+
+
+
+
