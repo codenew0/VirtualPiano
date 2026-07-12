@@ -23,7 +23,8 @@
       <div class="range-row">
         <select id="keyboard-preset">
           <option value="36,60">25 Keys (C2–C4)</option>
-          <option value="36,72" selected>37 Keys (C2–C5)</option>
+          <option value="36,72">37 Keys (C2–C5)</option>
+          <option value="48,84" selected>37 Keys (C3–C6)</option>
           <option value="36,84">49 Keys (C2–C6)</option>
           <option value="36,96">61 Keys (C2–C7)</option>
           <option value="24,96">73 Keys (C1–C7)</option>
@@ -33,11 +34,11 @@
       </div>
     </div>
 
-    <input type="hidden" id="range-low" value="36">
-    <input type="hidden" id="range-high" value="72">
+    <input type="hidden" id="range-low" value="48">
+    <input type="hidden" id="range-high" value="84">
 
     <div class="ctrl-group" style="justify-content:flex-end">
-      <span class="range-val"><span id="lv">C2</span> – <span id="hv">C5</span></span>
+      <span class="range-val"><span id="lv">C3</span> – <span id="hv">C6</span></span>
       <span class="key-count" id="key-count">37 keys</span>
     </div>
   </div>
@@ -61,6 +62,5 @@
   <script src="js/app.js" defer></script>
 </body>
 </html>
-
 
 
