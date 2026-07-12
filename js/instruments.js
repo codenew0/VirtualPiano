@@ -11,5 +11,6 @@ INSTRUMENTS.forEach(inst => {
 });
 instSel.addEventListener('change', () => { currentInst = instSel.value; });
 
+window.getCurrentInstrument = () => currentInst;
 
 

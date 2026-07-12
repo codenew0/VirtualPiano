@@ -1,12 +1,15 @@
 // -------------------------------------------------------
 //  Interaction
 // -------------------------------------------------------
-function triggerKey(midi, el) {
-  if (audioCtx.state === 'suspended') audioCtx.resume();
-  playNote(midi);
+async function triggerKey(midi, el) {
   el.classList.add('active');
   lastNote.textContent = noteName(midi) + '  (MIDI ' + midi + ')';
   setTimeout(() => el.classList.remove('active'), 200);
+
+  const played = await playNote(midi);
+  if (played) {
+    lastNote.textContent = noteName(midi) + '  (MIDI ' + midi + ')';
+  }
 }
 
 container.addEventListener('mousedown', e => {
@@ -39,6 +42,4 @@ document.addEventListener('keydown', e => {
 document.addEventListener('keyup', e => {
   pressedKeys.delete(e.key.toLowerCase());
 });
-
-
 
