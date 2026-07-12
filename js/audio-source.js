@@ -40,6 +40,9 @@ const PROGRAMS = {
 const audioContext = new (window.AudioContext || window.webkitAudioContext)({
   sampleRate: 44100,
 });
+const masterGain = audioContext.createGain();
+masterGain.gain.value = 1.2;
+masterGain.connect(audioContext.destination);
 
 let synthesizer = null;
 let setupPromise = null;
@@ -65,7 +68,7 @@ async function setupSynthesizer() {
 
     const soundFont = await response.arrayBuffer();
     const synth = new WorkletSynthesizer(audioContext);
-    synth.connect(audioContext.destination);
+    synth.connect(masterGain);
     await synth.soundBankManager.addSoundBank(soundFont, "signal-factory");
     await synth.isReady;
     synthesizer = synth;

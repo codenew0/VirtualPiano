@@ -12,6 +12,47 @@ const KEY_MAP = {
 const CHAR_MAP = {};
 for (const [midi, ch] of Object.entries(KEY_MAP)) CHAR_MAP[ch] = Number(midi);
 
+const PHYSICAL_CODES = [
+  'Digit1','Digit2','Digit3','Digit4','Digit5','Digit6','Digit7','Digit8','Digit9','Digit0',
+  'KeyQ','KeyW','KeyE','KeyR','KeyT','KeyY','KeyU','KeyI','KeyO','KeyP',
+  'KeyA','KeyS','KeyD','KeyF','KeyG','KeyH','KeyJ','KeyK','KeyL',
+  'KeyZ','KeyX','KeyC','KeyV','KeyB','KeyN','KeyM','Comma'
+];
+
+const LOW_CODE_MAP = {};
+const HIGH_CODE_MAP = {};
+const LOW_LABEL_MAP = {};
+const HIGH_LABEL_MAP = {};
+const LOW_LABELS = [
+  '!','"','#','$','%','&',"'",'(',')','⇧0',
+  '⇧Q','⇧W','⇧E','⇧R','⇧T','⇧Y','⇧U','⇧I','⇧O','⇧P',
+  '⇧A','⇧S','⇧D','⇧F','⇧G','⇧H','⇧J'
+];
+
+PHYSICAL_CODES.slice(0, 27).forEach((code, index) => {
+  const midi = 21 + index;
+  LOW_CODE_MAP[code] = midi;
+  LOW_LABEL_MAP[midi] = LOW_LABELS[index];
+});
+
+PHYSICAL_CODES.slice(12, 36).forEach((code, index) => {
+  const midi = 85 + index;
+  HIGH_CODE_MAP[code] = midi;
+  HIGH_LABEL_MAP[midi] = 'Ctrl+' + code.replace('Key', '');
+});
+
+function midiForKeyboardEvent(event) {
+  if (event.altKey || event.metaKey) return null;
+  if (event.ctrlKey && !event.shiftKey) return HIGH_CODE_MAP[event.code] ?? null;
+  if (event.shiftKey && !event.ctrlKey) return LOW_CODE_MAP[event.code] ?? null;
+  if (!event.ctrlKey && !event.shiftKey) return CHAR_MAP[event.key.toLowerCase()] ?? null;
+  return null;
+}
+
+function shortcutLabel(midi) {
+  return KEY_MAP[midi]?.toUpperCase() || LOW_LABEL_MAP[midi] || HIGH_LABEL_MAP[midi] || '';
+}
+
 const NOTE_NAMES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
 function noteName(midi) {
   return NOTE_NAMES[midi % 12] + (Math.floor(midi / 12) - 1);
@@ -55,5 +96,4 @@ const INSTRUMENTS = [
 ];
 
 let currentInst = 'piano';
-
 

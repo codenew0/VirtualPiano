@@ -41,28 +41,27 @@ container.addEventListener('pointerup', releasePointer);
 container.addEventListener('pointercancel', releasePointer);
 container.addEventListener('lostpointercapture', releasePointer);
 
-const pressedKeys = new Set();
+const pressedKeys = new Map();
 
 document.addEventListener('keydown', e => {
   if (e.repeat) return;
-  const ch = e.key.toLowerCase();
-  if (ch in CHAR_MAP) {
-    e.preventDefault();
-    const midi = CHAR_MAP[ch];
-    if (pressedKeys.has(ch)) return;
-    pressedKeys.add(ch);
-    const el = whiteEls[midi] || blackEls[midi];
-    if (el) pressKey(midi, el);
-  }
+  const midi = midiForKeyboardEvent(e);
+  if (midi === null || pressedKeys.has(e.code)) return;
+
+  const el = whiteEls[midi] || blackEls[midi];
+  if (!el) return;
+
+  e.preventDefault();
+  pressedKeys.set(e.code, { midi, el });
+  pressKey(midi, el);
 });
 
 document.addEventListener('keyup', e => {
-  const ch = e.key.toLowerCase();
-  if (!(ch in CHAR_MAP)) return;
+  const pressedKey = pressedKeys.get(e.code);
+  if (!pressedKey) return;
 
-  const midi = CHAR_MAP[ch];
-  pressedKeys.delete(ch);
-  releaseKey(midi, whiteEls[midi] || blackEls[midi]);
+  pressedKeys.delete(e.code);
+  releaseKey(pressedKey.midi, pressedKey.el);
 });
 
 function releaseEverything() {

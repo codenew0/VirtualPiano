@@ -21,10 +21,10 @@ function buildPiano() {
     const el = document.createElement('div');
     el.className = 'key-white';
     el.dataset.midi = midi;
-    const kc = KEY_MAP[midi] || '';
+    const kc = shortcutLabel(midi);
     el.innerHTML = `
       <span class="note-label">${noteName(midi)}</span>
-      <span class="key-label">${kc.toUpperCase()}</span>
+      <span class="key-label">${kc}</span>
     `;
     container.appendChild(el);
     whiteEls[midi] = el;
@@ -41,10 +41,10 @@ function buildPiano() {
       const left = 24 + idx * WHITE_W + WHITE_W - 14;
       el.style.left = left + 'px';
       el.style.top  = '20px';
-      const kc = KEY_MAP[bm] || '';
+      const kc = shortcutLabel(bm);
       el.innerHTML = `
         <span class="note-label">${noteName(bm)}</span>
-        <span class="key-label">${kc.toUpperCase()}</span>
+        <span class="key-label">${kc}</span>
       `;
       container.appendChild(el);
       blackEls[bm] = el;
@@ -53,6 +53,5 @@ function buildPiano() {
 
   container.style.width = (whites.length * WHITE_W + 48) + 'px';
 }
-
 
 
