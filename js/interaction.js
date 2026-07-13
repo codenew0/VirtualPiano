@@ -42,10 +42,17 @@ container.addEventListener('pointercancel', releasePointer);
 container.addEventListener('lostpointercapture', releasePointer);
 
 const pressedKeys = new Map();
+let spaceModifier = false;
 
 document.addEventListener('keydown', e => {
   if (e.repeat) return;
-  const midi = midiForKeyboardEvent(e);
+  if (e.code === 'Space') {
+    e.preventDefault();
+    spaceModifier = true;
+    return;
+  }
+
+  const midi = midiForKeyboardEvent(e, spaceModifier);
   if (midi === null || pressedKeys.has(e.code)) return;
 
   const el = whiteEls[midi] || blackEls[midi];
@@ -57,6 +64,12 @@ document.addEventListener('keydown', e => {
 });
 
 document.addEventListener('keyup', e => {
+  if (e.code === 'Space') {
+    e.preventDefault();
+    spaceModifier = false;
+    return;
+  }
+
   const pressedKey = pressedKeys.get(e.code);
   if (!pressedKey) return;
 
@@ -65,6 +78,7 @@ document.addEventListener('keyup', e => {
 });
 
 function releaseEverything() {
+  spaceModifier = false;
   pressedKeys.clear();
   activePointers.clear();
   document.querySelectorAll('[data-midi].active').forEach(el => {

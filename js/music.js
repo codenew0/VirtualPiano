@@ -38,14 +38,18 @@ PHYSICAL_CODES.slice(0, 27).forEach((code, index) => {
 PHYSICAL_CODES.slice(12, 36).forEach((code, index) => {
   const midi = 85 + index;
   HIGH_CODE_MAP[code] = midi;
-  HIGH_LABEL_MAP[midi] = 'Ctrl+' + code.replace('Key', '');
+  HIGH_LABEL_MAP[midi] = 'Sp+' + code.replace('Key', '');
 });
 
-function midiForKeyboardEvent(event) {
+function midiForKeyboardEvent(event, spaceModifier = false) {
   if (event.altKey || event.metaKey) return null;
-  if (event.ctrlKey && !event.shiftKey) return HIGH_CODE_MAP[event.code] ?? null;
+  if (spaceModifier && !event.ctrlKey && !event.shiftKey) {
+    return HIGH_CODE_MAP[event.code] ?? null;
+  }
   if (event.shiftKey && !event.ctrlKey) return LOW_CODE_MAP[event.code] ?? null;
-  if (!event.ctrlKey && !event.shiftKey) return CHAR_MAP[event.key.toLowerCase()] ?? null;
+  if (!spaceModifier && !event.ctrlKey && !event.shiftKey) {
+    return CHAR_MAP[event.key.toLowerCase()] ?? null;
+  }
   return null;
 }
 
@@ -96,4 +100,3 @@ const INSTRUMENTS = [
 ];
 
 let currentInst = 'piano';
-
