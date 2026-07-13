@@ -20,7 +20,7 @@ const FUNCTION_CODES = Array.from({ length: 12 }, (_, index) => 'F' + (index + 1
 const NUMPAD_CODES = [
   'Numpad0','Numpad1','Numpad2','Numpad3','Numpad4',
   'Numpad5','Numpad6','Numpad7','Numpad8','Numpad9',
-  'NumpadDecimal','NumpadAdd','NumpadSubtract','NumpadMultiply','NumpadDivide'
+  'NumpadDecimal','NumpadAdd','NumpadSubtract','NumpadMultiply','Insert'
 ];
 const LOW_CODES = [...FUNCTION_CODES, ...NUMPAD_CODES];
 const HIGH_CODES = [
@@ -35,7 +35,6 @@ function compactKeyName(code) {
     .replace('NumpadAdd', 'Num+')
     .replace('NumpadSubtract', 'Num-')
     .replace('NumpadMultiply', 'Num*')
-    .replace('NumpadDivide', 'Num/')
     .replace('NumpadEnter', 'Num↵')
     .replace('Numpad', 'Num');
 }
