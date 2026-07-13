@@ -12,43 +12,51 @@ const KEY_MAP = {
 const CHAR_MAP = {};
 for (const [midi, ch] of Object.entries(KEY_MAP)) CHAR_MAP[ch] = Number(midi);
 
-const PHYSICAL_CODES = [
-  'Digit1','Digit2','Digit3','Digit4','Digit5','Digit6','Digit7','Digit8','Digit9','Digit0',
-  'KeyQ','KeyW','KeyE','KeyR','KeyT','KeyY','KeyU','KeyI','KeyO','KeyP',
-  'KeyA','KeyS','KeyD','KeyF','KeyG','KeyH','KeyJ','KeyK','KeyL',
-  'KeyZ','KeyX','KeyC','KeyV','KeyB','KeyN','KeyM','Comma'
-];
-
 const LOW_CODE_MAP = {};
 const HIGH_CODE_MAP = {};
 const LOW_LABEL_MAP = {};
 const HIGH_LABEL_MAP = {};
-const LOW_LABELS = [
-  '!','"','#','$','%','&',"'",'(',')','⇧0',
-  '⇧Q','⇧W','⇧E','⇧R','⇧T','⇧Y','⇧U','⇧I','⇧O','⇧P',
-  '⇧A','⇧S','⇧D','⇧F','⇧G','⇧H','⇧J'
+const FUNCTION_CODES = Array.from({ length: 12 }, (_, index) => 'F' + (index + 13));
+const NUMPAD_CODES = [
+  'Numpad0','Numpad1','Numpad2','Numpad3','Numpad4',
+  'Numpad5','Numpad6','Numpad7','Numpad8','Numpad9',
+  'NumpadDecimal','NumpadAdd','NumpadSubtract','NumpadMultiply','NumpadDivide'
+];
+const LOW_CODES = [...FUNCTION_CODES, ...NUMPAD_CODES];
+const HIGH_CODES = [
+  ...FUNCTION_CODES,
+  'Numpad0','Numpad1','Numpad2','Numpad3','Numpad4','Numpad5',
+  'Numpad6','Numpad7','Numpad8','Numpad9','NumpadDecimal','NumpadEnter'
 ];
 
-PHYSICAL_CODES.slice(0, 27).forEach((code, index) => {
+function compactKeyName(code) {
+  return code
+    .replace('NumpadDecimal', 'Num.')
+    .replace('NumpadAdd', 'Num+')
+    .replace('NumpadSubtract', 'Num-')
+    .replace('NumpadMultiply', 'Num*')
+    .replace('NumpadDivide', 'Num/')
+    .replace('NumpadEnter', 'Num↵')
+    .replace('Numpad', 'Num');
+}
+
+LOW_CODES.forEach((code, index) => {
   const midi = 21 + index;
   LOW_CODE_MAP[code] = midi;
-  LOW_LABEL_MAP[midi] = LOW_LABELS[index];
+  LOW_LABEL_MAP[midi] = compactKeyName(code);
 });
 
-PHYSICAL_CODES.slice(12, 36).forEach((code, index) => {
+HIGH_CODES.forEach((code, index) => {
   const midi = 85 + index;
   HIGH_CODE_MAP[code] = midi;
-  HIGH_LABEL_MAP[midi] = 'Sp+' + code.replace('Key', '');
+  HIGH_LABEL_MAP[midi] = 'C+' + compactKeyName(code);
 });
 
-function midiForKeyboardEvent(event, spaceModifier = false) {
+function midiForKeyboardEvent(event) {
   if (event.altKey || event.metaKey) return null;
-  if (spaceModifier && !event.ctrlKey && !event.shiftKey) {
-    return HIGH_CODE_MAP[event.code] ?? null;
-  }
-  if (event.shiftKey && !event.ctrlKey) return LOW_CODE_MAP[event.code] ?? null;
-  if (!spaceModifier && !event.ctrlKey && !event.shiftKey) {
-    return CHAR_MAP[event.key.toLowerCase()] ?? null;
+  if (event.ctrlKey && !event.shiftKey) return HIGH_CODE_MAP[event.code] ?? null;
+  if (!event.ctrlKey && !event.shiftKey) {
+    return LOW_CODE_MAP[event.code] ?? CHAR_MAP[event.key.toLowerCase()] ?? null;
   }
   return null;
 }
